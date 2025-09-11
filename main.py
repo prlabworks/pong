@@ -13,9 +13,8 @@ HEIGHT = 600
 TITLE = "Pong"
 
 screen = Screen()
-rpaddle = Paddle((350, 0))
-lpaddle = Paddle((-350, 0))
-
+r_paddle = Paddle((350, 0))
+l_paddle = Paddle((-350, 0))
 
 screen.title(TITLE)
 screen.setup(width=WIDTH, height=HEIGHT, starty=STARTY, startx=STARTX)
@@ -23,18 +22,15 @@ screen.bgcolor(BGCOLOR)
 screen.tracer(0)
 
 screen.listen()
-screen.onkey(rpaddle.go_up, "Up")
-screen.onkey(rpaddle.go_down, "Down")
-screen.onkey(lpaddle.go_up, "w")
-screen.onkey(lpaddle.go_down, "s")
+screen.onkey(r_paddle.go_up, "Up")
+screen.onkey(r_paddle.go_down, "Down")
+screen.onkey(l_paddle.go_up, "w")
+screen.onkey(l_paddle.go_down, "s")
 
 game_is_on = True
 
 while game_is_on:
+
     screen.update()
-
-    
-    
-
 
 screen.exitonclick()
