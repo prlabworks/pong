@@ -15,6 +15,7 @@ BGCOLOR = "black"
 WIDTH = 800
 HEIGHT = 600
 TITLE = "Pong"
+winning_score = 5
 
 screen = Screen()
 scoreboard = Scoreboard()
@@ -51,13 +52,23 @@ while game_is_on:
 
     # Detect if ball goes out of bounds for right paddle
     if ball.xcor() > 380:
-        ball.reset_position()
         scoreboard.l_point()
+        if scoreboard.l_score == winning_score:
+            scoreboard.goto(0, 0)
+            scoreboard.write("Left Player Wins!", align="center", font=("Courier", 30, "normal"))
+            game_is_on = False
+        else:
+            ball.reset_position()
     
     # Detect if ball goes out of bounds for left paddle
     if ball.xcor() < -380:
-        ball.reset_position()
         scoreboard.r_point()
+        if scoreboard.r_score == winning_score:
+            scoreboard.goto(0, 0)
+            scoreboard.write("Right Player Wins!", align="center", font=("Courier", 30, "normal"))
+            game_is_on = False
+        else:
+            ball.reset_position()
 
     # Move the ball
     ball.move()
