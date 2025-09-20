@@ -45,9 +45,34 @@ while game_is_on:
         ball.bounce_y()
 
     # Detect collision with paddles
-    if (ball.distance(r_paddle) < 50 and ball.xcor() > 325) or (ball.distance(l_paddle) < 50 and ball.xcor() < -325):
-         ball.move_speed *= 0.9  # Increase speed on paddle hit
-         ball.bounce_x()
+    # More robust paddle collision handling:
+    # - check x threshold and vertical overlap
+    # - nudge the ball just outside the paddle to avoid multiple rapid collisions
+    # - adjust vertical velocity based on where the ball hit the paddle
+    PADDLE_HALF_HEIGHT = 50  # matches Paddle shapesize(5) * 10 (half of 100)
+    MAX_Y_SPEED = 15
+
+    # Right paddle collision
+    if ball.xcor() > 320 and abs(ball.ycor() - r_paddle.ycor()) < PADDLE_HALF_HEIGHT:
+        # Nudge ball outside the paddle so it won't be detected again immediately
+        ball.setx(330)
+        # Compute deflection based on hit position (-1..1)
+        offset = ball.ycor() - r_paddle.ycor()
+        normalized = max(-1, min(1, offset / PADDLE_HALF_HEIGHT))
+        ball.y_move = normalized * MAX_Y_SPEED
+        # Ensure ball goes left
+        ball.x_move = -abs(ball.x_move)
+        ball.move_speed *= 0.9  # speed up
+
+    # Left paddle collision
+    if ball.xcor() < -320 and abs(ball.ycor() - l_paddle.ycor()) < PADDLE_HALF_HEIGHT:
+        ball.setx(-330)
+        offset = ball.ycor() - l_paddle.ycor()
+        normalized = max(-1, min(1, offset / PADDLE_HALF_HEIGHT))
+        ball.y_move = normalized * MAX_Y_SPEED
+        # Ensure ball goes right
+        ball.x_move = abs(ball.x_move)
+        ball.move_speed *= 0.9  # speed up
          
 
     # Detect if ball goes out of bounds for right paddle
